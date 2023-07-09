@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Container } from "components/Container";
 import { Search } from "components/Search";
@@ -8,11 +8,16 @@ import { defaultUser } from "mock";
 import { GithubError, GithubUser, LocalGithubUser } from "types";
 import { extractLocalUser } from "utils/extract-local-user";
 import { isGithubUser } from "utils/typeguards";
+import { NoResults } from "components/NoResults";
 
 const BASE_URL = "https://api.github.com/users/";
 
 function App() {
   const [user, setUser] = useState<LocalGithubUser | null>(defaultUser);
+
+  const getBackToDefaultUser = () => {
+    setUser(defaultUser);
+  };
 
   const fetchUser = async (username: string) => {
     const url = BASE_URL + username;
@@ -30,9 +35,13 @@ function App() {
 
   return (
     <Container>
-      <Header />
+      <Header getBackToDefaultUser={getBackToDefaultUser} />
       <Search hasError={!user} onSubmit={fetchUser} />
-      {user && <UserCard {...user} />}
+      {user ? (
+        <UserCard {...user} />
+      ) : (
+        <NoResults getBackToDefaultUser={getBackToDefaultUser} />
+      )}
     </Container>
   );
 }

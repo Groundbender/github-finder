@@ -2,9 +2,14 @@ import React from "react";
 import styles from "./Header.module.scss";
 import { ThemeSwitcher } from "components/ThemeSwitcher";
 
-export const Header = () => (
+interface HeaderProps {
+  getBackToDefaultUser: () => void;
+}
+export const Header = ({ getBackToDefaultUser }: HeaderProps) => (
   <div className={styles.header}>
-    <div className={styles.logo}>devfinder</div>
+    <div onClick={getBackToDefaultUser} className={styles.logo}>
+      devfinder
+    </div>
     <ThemeSwitcher />
   </div>
 );
